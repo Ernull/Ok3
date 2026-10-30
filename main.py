@@ -2438,9 +2438,7 @@ async def process_delete_addresses_for_db(bot, chat_id: int, acc_keys: list):
 BATCH_MODE_TITLES = {
     'zip_to_link': '📦 مبدل انبوه آرشیو ZIP به لینک اختصاصی',
     'user_discount_check': '🎫 اسکنر هوشمند کدهای تخفیف (فایل / لینک)',
-    'user_create_address': '🗺 ثبت موقعیت مکانی روی حساب‌های ارسالی',
     'user_check_orders': '🛒 استعلام وضعیت سفارشات حساب‌های ارسالی',
-    'user_delete_addresses': '🧹 پاکسازی آدرس‌های ثبت‌شده در حساب‌های ارسالی',
 }
 
 
@@ -2470,9 +2468,6 @@ def get_batch_collector_status_text(mode: str, user_data: dict) -> str:
     url_cnt = sum(len(x.get('urls', [])) for x in queue if x['kind'] == 'urls')
     total_size = sum(x.get('file_size', 0) for x in queue)
 
-    addr_desc = user_data.get('batch_address_desc')
-    extra_info = f"\n📌 <b>موقعیت مکانی انتخابی:</b> <code>{html.escape(addr_desc)}</code>\n" if (mode == 'user_create_address' and addr_desc) else ""
-
     if not queue:
         if mode == 'zip_to_link':
             return (
@@ -2486,7 +2481,7 @@ def get_batch_collector_status_text(mode: str, user_data: dict) -> str:
         else:
             return (
                 f"💎 <b>{title}</b>\n"
-                f"━━━━━━━━━━━━━━━━━━━━{extra_info}\n"
+                "━━━━━━━━━━━━━━━━━━━━\n"
                 "📤 ورودی‌های خود را در یکی از قالب‌های زیر ارسال نمایید:\n"
                 "▫️ آرشیوهای <code>.zip</code> (حساب‌های JSON یا لیست لینک)\n"
                 "▫️ اسناد متنی <code>.txt</code> یا <code>.json</code>\n"
@@ -2496,7 +2491,7 @@ def get_batch_collector_status_text(mode: str, user_data: dict) -> str:
 
     return (
         f"📥 <b>{title}</b>\n"
-        f"━━━━━━━━━━━━━━━━━━━━{extra_info}\n"
+        "━━━━━━━━━━━━━━━━━━━━\n"
         f"🗂 <b>وضعیت صف انتظار فعلی:</b>\n"
         f"▫️ بسته‌های ZIP: <b><code>{zip_cnt}</code> عدد</b>\n"
         f"▫️ اسناد TXT/JSON: <b><code>{doc_cnt}</code> عدد</b>\n"
@@ -3666,14 +3661,6 @@ def get_admin_keyboard(active_tag_name=None):
         [
             InlineKeyboardButton("🛒 استعلام خرید دیتابیس", callback_data="admin_orders_db"),
             InlineKeyboardButton("🛍 استعلام خرید فایل/لینک", callback_data="admin_orders_user")
-        ],
-        [
-            InlineKeyboardButton("🗺 ثبت آدرس روی دیتابیس", callback_data="admin_addr_db"),
-            InlineKeyboardButton("📌 ثبت آدرس روی فایل/لینک", callback_data="admin_addr_user")
-        ],
-        [
-            InlineKeyboardButton("🧹 پاکسازی آدرس دیتابیس", callback_data="admin_del_addr_db"),
-            InlineKeyboardButton("🗑 پاکسازی آدرس فایل/لینک", callback_data="admin_del_addr_user")
         ],
         [
             InlineKeyboardButton(tag_label, callback_data="set_tag"),
